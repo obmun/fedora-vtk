@@ -1,15 +1,43 @@
-diff --git a/CMake/vtkDetermineCompilerFlags.cmake b/CMake/vtkDetermineCompilerFlags.cmake
-index db642b8..709212c 100644
---- a/CMake/vtkDetermineCompilerFlags.cmake
-+++ b/CMake/vtkDetermineCompilerFlags.cmake
-@@ -1,6 +1,10 @@
- SET(VTK_REQUIRED_C_FLAGS)
- SET(VTK_REQUIRED_CXX_FLAGS)
- 
-+# Fields inside Tcl_Interp are deprecated. Temporarily enable them
-+SET(VTK_REQUIRED_CXX_FLAGS
-+  "${VTK_REQUIRED_CXX_FLAGS} -DUSE_INTERP_RESULT")
-+
- # make sure Crun is linked in with the native compiler, it is
- # not used by default for shared libraries and is required for
- # things like java to work.
+commit 5dcab48a4c2fc679785074ddf7030dc54ebc91a6
+Author: Jacobo Cabaleiro <obmun.h@gmail.com>
+Date:   Sat Mar 21 16:48:46 2015 +0000
+
+    Fix access to deprecated Tcl_Interp fields
+
+diff --git a/Common/vtkTclUtil.cxx b/Common/vtkTclUtil.cxx
+index 65cc6d9..7862cf5 100644
+--- a/Common/vtkTclUtil.cxx
++++ b/Common/vtkTclUtil.cxx
+@@ -490,13 +490,13 @@ VTKTCL_EXPORT void vtkTclVoidFunc(void *arg)
+       vtkGenericWarningMacro("Error returned from vtk/tcl callback:\n" <<
+                              arg2->command << endl <<
+                              Tcl_GetVar(arg2->interp,(char *)("errorInfo"),0) <<
+-                             " at line number " << arg2->interp->errorLine);
++                             " at line number " << Tcl_GetErrorLine(arg2->interp));
+       }
+     else
+       {
+       vtkGenericWarningMacro("Error returned from vtk/tcl callback:\n" <<
+                              arg2->command << endl <<
+-                             " at line number " << arg2->interp->errorLine);
++                             " at line number " << Tcl_GetErrorLine(arg2->interp));
+       }
+     }
+ }
+@@ -723,14 +723,14 @@ void vtkTclCommand::Execute(vtkObject *, unsigned long, void *)
+       vtkGenericWarningMacro("Error returned from vtk/tcl callback:\n" <<
+                              this->StringCommand << endl <<
+                              Tcl_GetVar(this->Interp,(char *)("errorInfo"),0) <<
+-                             " at line number " << this->Interp->errorLine);
++                             " at line number " << Tcl_GetErrorLine(this->Interp));
+       }
+     else
+       {
+       vtkGenericWarningMacro("Error returned from vtk/tcl callback:\n" <<
+                              this->StringCommand << endl <<
+                              " at line number " << 
+-                             this->Interp->errorLine);
++                             Tcl_GetErrorLine(this->Interp));
+       }
+     }
+   else if (res == -1)
