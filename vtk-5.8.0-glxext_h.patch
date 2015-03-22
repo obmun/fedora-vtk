@@ -1,0 +1,25 @@
+commit da89dcc7d5513983027a2efa0320b61a8007bae2
+Author: Jacobo Cabaleiro <obmun.h@gmail.com>
+Date:   Sat Mar 21 18:14:13 2015 +0000
+
+    fix: make gl.h include system glext.h in vtk OpenGL header
+    
+    Otherwise compilation fails later due to missing type declarations.
+    See https://bugzilla.redhat.com/show_bug.cgi?id=1138466 for more info.
+    
+    I do not completely understand what VTK was trying to solve, but initial
+    testing seems that this is not affecting the library in Fedora.
+
+diff --git a/Rendering/vtkOpenGL.h b/Rendering/vtkOpenGL.h
+index 671f6f8..7b85a81 100644
+--- a/Rendering/vtkOpenGL.h
++++ b/Rendering/vtkOpenGL.h
+@@ -18,7 +18,7 @@
+ #include "vtkConfigure.h"
+ 
+ // To prevent gl.h to include glext.h provided by the system
+-#define GL_GLEXT_LEGACY
++// #define GL_GLEXT_LEGACY
+ #if defined(__APPLE__) && (defined(VTK_USE_CARBON) || defined(VTK_USE_COCOA))
+ # include <OpenGL/gl.h> // Include OpenGL API.
+ #else

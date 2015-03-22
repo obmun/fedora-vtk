@@ -7,7 +7,7 @@
 Summary: The Visualization Toolkit - A high level 3D visualization library
 Name: vtk
 Version: 5.8.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 # This is a variant BSD license, a cross between BSD and ZLIB.
 # For all intents, it has the same rights and restrictions as BSD.
 # http://fedoraproject.org/wiki/Licensing/BSD#VTKBSDVariant
@@ -18,11 +18,15 @@ Patch1: vtk-5.2.0-gcc43.patch
 # Add soname to libvtkNetCDF_cxx
 # http://vtk.org/Bug/view.php?id=12207
 Patch2: vtk-soname.patch
-# Patch to fix compilation with boost 1.48
-Patch3: vtk-boost-1.48.0-bfs.patch
+# Patch to fix compilation with boost > 1.48
+Patch3: vtk-boost-bfs.patch
 # Use system libraries
 # http://public.kitware.com/Bug/view.php?id=11823
 Patch5: vtk-5.6.1-system.patch
+Patch6: vtk-5.8.0-freetype.patch
+Patch7: vtk-5.8.0-tclinterp.patch
+Patch8: vtk-5.8.0-glxext_h.patch
+Patch9: vtk-5.8.0-void_ptr_cast.patch
 
 URL: http://vtk.org/
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -138,6 +142,11 @@ programming languages.
 %patch2 -p1 -b .soname
 %patch3 -p1 -b .boost
 %patch5 -p1 -b .system
+%patch6 -p1 -b .freetype
+%patch7 -p1 -b .tclinterp
+%patch8 -p1 -b .glxexth
+%patch9 -p1 -b .voidptrcast
+
 
 # Replace relative path ../../../VTKData with %{_datadir}/vtkdata-%{version}
 # otherwise it will break on symlinks.

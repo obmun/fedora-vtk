@@ -1,0 +1,24 @@
+commit c34d94845400d89ec9f6b444e6d92db4e7e71049
+Author: Jacobo Cabaleiro <obmun.h@gmail.com>
+Date:   Sat Mar 21 18:26:48 2015 +0000
+
+    Add missing void * cast
+    
+    Recent g++ does no longer acept the automatic cast from void * to other
+    pointer types. This is valid in C but not in C++.
+
+diff --git a/Rendering/vtkTkRenderWidget.cxx b/Rendering/vtkTkRenderWidget.cxx
+index a85a2dc..f429749 100644
+--- a/Rendering/vtkTkRenderWidget.cxx
++++ b/Rendering/vtkTkRenderWidget.cxx
+@@ -1306,8 +1306,8 @@ vtkTkRenderWidget_MakeRenderWindow(struct vtkTkRenderWidget *self)
+     vtkTclGetObjectFromPointer(self->Interp, self->RenderWindow,
+           "vtkRenderWindow");
+ #endif
+-    self->RW = ckalloc(
+-      static_cast<unsigned int>(strlen(Tcl_GetStringResult(self->Interp)) + 1));
++    self->RW = static_cast<char *>(ckalloc(
++      static_cast<unsigned int>(strlen(Tcl_GetStringResult(self->Interp)) + 1)));
+     strcpy(self->RW, Tcl_GetStringResult(self->Interp));
+     Tcl_ResetResult(self->Interp);
+     }
