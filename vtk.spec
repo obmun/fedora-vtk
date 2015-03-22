@@ -213,7 +213,7 @@ pushd build
 # -DVTK_USE_MPI:BOOL=ON \
 
 # Got intermittent build error with -j
-make #%{?_smp_mflags}
+make %{?_smp_mflags}
 
 # Remove executable bits from sources (some of which are generated)
 find . -name \*.c -or -name \*.cxx -or -name \*.h -or -name \*.hxx -or \

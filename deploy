@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cp *.patch ~/rpmbuild/SOURCES/
+cp *.spec ~/rpmbuild/SPECS/
